@@ -82,6 +82,22 @@ const LoginC = async (req, res) => {
     }
 }
 
+const getCurrentUser = async (req, res) => {
+try{
+    const {id} = req.params
+    const user=await userModel.findOne({id})
+    if (!user) {
+        return res.status(200).send({ message: "user not regisred", success: false })
+    }
+    return res.status(200).send({  success: true, user })
+
+}
+catch (error){
+    console.log(error)
+    return res.status(500).send({ message: "Server Error", success: false, error })
+}
+}
+
 
 
 
@@ -92,5 +108,7 @@ router.get('/all-users', getAllUsers)//get all users
 router.post('/register', RegisterC) //register a user
 
 router.post('/login', LoginC) //login a user
+
+router.get('current-user/:id', getCurrentUser)
 
 module.exports = router;
