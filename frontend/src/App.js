@@ -5,7 +5,7 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import { createTheme, ThemeProvider } from "@mui/material";
 import YourQuotes from "./pages/YourQuotes";
-import AllPages from "./pages/AllPages";
+
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import Header from "./components/Header";
 
@@ -35,12 +35,11 @@ function App() {
       <ThemeProvider theme={theme}>  <BrowserRouter>
         {/* <Header /> */}
         <Routes>
-          {isLogi ? <Route path="/" element={<Home />} /> : <Route path="/login" element={<Login />} />}
-
-
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/Signup" element={<SignUp />} />
           <Route path="/your-quotes" element={<YourQuotes />} />
-          <Route path="/All-quotes" element={<AllPages />} />
+
         </Routes>
 
       </BrowserRouter>

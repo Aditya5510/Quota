@@ -90,7 +90,7 @@ const UpdateBlogById = async (req, res) => {
 const DeleteBlogById = async (req, res) => {
     try {
         const { id } = req.params
-        const blog = await blogModel.findOneAndDelete(id).populate("user")
+        const blog = await blogModel.findByIdAndDelete(id).populate("user")
 
         if (!blog) {
             return res.status(400).send({ message: "No blog found", success: false })

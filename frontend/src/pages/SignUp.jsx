@@ -31,7 +31,7 @@ export default function SignUp() {
       });
       //   console.log(newdata.status);
       if (data.success) {
-        alert("Registrastion successFul you dumbass");
+        alert("Registrastion successFull,please login ");
         navigate("/login");
       }
     } catch (error) {
@@ -53,8 +53,11 @@ export default function SignUp() {
     >
       <Container
         component="main"
-        maxWidth="xs"
-        sx={{ border: "0.1px solid black", borderRadius: "10px" }}
+        sx={{
+          border: "0.1px solid black",
+          borderRadius: "10px",
+          maxWidth: { lg: "30vw", md: "30", sm: "80vw", xs: "85vw" },
+        }}
       >
         <CssBaseline />
         <Box

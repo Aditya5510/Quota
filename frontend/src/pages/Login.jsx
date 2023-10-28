@@ -38,12 +38,18 @@ export default function Login() {
       //   console.log(newdata.status);
       if (data.success) {
         localStorage.setItem("userId", data?.user._id);
+        localStorage.setItem("userName", data?.user.username);
 
         dispatch(authActions.login());
         alert("Loggin you in");
         navigate("/");
+      } else {
+        if (data.message === "user not regisred") {
+          alert("User not registered,Please register first");
+        }
       }
     } catch (error) {
+      alert("Internal Server error ,please try again later.");
       console.log(error);
     }
   };
@@ -62,9 +68,12 @@ export default function Login() {
       >
         <div className="star" />
         <Container
-          component="main"
-          maxWidth="xs"
-          sx={{ border: "0.1px solid black", borderRadius: "5px" }}
+          component="Box"
+          sx={{
+            border: "0.1px solid black",
+            borderRadius: "5px",
+            maxWidth: { lg: "30vw", md: "30", sm: "80vw", xs: "85vw" },
+          }}
         >
           <Box
             sx={{

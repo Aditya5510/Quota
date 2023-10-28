@@ -7,89 +7,61 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { IconButton } from "@mui/material";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import Tooltip from "@mui/material/Tooltip";
 import { TextField, Box } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import CreateIcon from "@mui/icons-material/Create";
 
-function Prompt() {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Open alert dialog
-      </Button>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Use Google's location service?"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
-          <Button onClick={handleClose} autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  );
-}
-
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
-export default function CreateBlog() {
+export default function ModifyBlog({ id }) {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
+  const [title, setTitle] = React.useState("");
+  const [content, setContent] = React.useState("");
+  const [n, setn] = React.useState(false);
 
-  const handleClickOpen = () => {
+  const handleClickOpen = async () => {
+    fetchBlog();
     setOpen(true);
+  };
+
+  const fetchBlog = async () => {
+    try {
+      const { data } = await axios.get(`/api/v1/blog/get-blog/${id}`);
+      if (data?.success) {
+        setTitle(data?.blog.title);
+        setContent(data?.blog.content);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleClose = () => {
     setOpen(false);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newdata = new FormData(e.currentTarget);
 
     handleClose();
     try {
-      const id = localStorage.getItem("userId");
-
-      const { data } = await axios.post("/api/v1/blog/add-blog", {
+      const { data } = await axios.put(`/api/v1/blog/update-blog/${id}`, {
         title: newdata.get("Title"),
         content: newdata.get("Quote"),
         Image: "sdasdasd",
-        user: id,
       });
 
       if (data?.success) {
-        console.log(data);
-        alert("Blog added successfully");
-        navigate("/your-quotes");
+        setn(true);
+        alert("Blog Modified successfully");
+        navigate("/");
       }
     } catch (e) {
       console.log(e);
@@ -97,18 +69,12 @@ export default function CreateBlog() {
   };
   return (
     <div>
-      <Tooltip title="Add a Quote">
-        <IconButton variant="outlined" onClick={handleClickOpen}>
-          <AddCircleIcon
-            sx={{
-              height: "50px",
-              width: "50px",
-              color: "#343435",
-              backgroundColor: " #4ADB9A",
-              borderRadius: "500px",
-              padding: "1px",
-            }}
-          />
+      <Tooltip title="Modify this Quote">
+        <IconButton
+          onClick={handleClickOpen}
+          sx={{ position: "absolute", top: "0.1px", left: "0.1px" }}
+        >
+          <AutoFixHighIcon sx={{ color: "#ad840bbd" }} />
         </IconButton>
       </Tooltip>
       <Dialog
@@ -118,7 +84,7 @@ export default function CreateBlog() {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Add your Quote here!"}</DialogTitle>
+        <DialogTitle>{"Modify your Quote!"}</DialogTitle>
         <DialogContent sx={{ height: "auto" }}>
           <Box
             component="form"
@@ -128,25 +94,23 @@ export default function CreateBlog() {
           >
             <TextField
               margin="normal"
-              required
               fullWidth
               name="Title"
               label="Title"
               multiline
               rows={2}
-              defaultValue="Title goes here"
+              defaultValue={title}
               autoFocus
             />
             <TextField
               margin="normal"
-              required
               fullWidth
-              id="email"
               label="Quote"
               name="Quote"
               multiline
               rows={5}
-              defaultValue="Quote goes here"
+              defaultValue={content}
+              autoFocus
             />
 
             <Button
@@ -156,7 +120,7 @@ export default function CreateBlog() {
               sx={{ mt: 3, mb: 1 }}
               endIcon={<CreateIcon />}
             >
-              Create
+              Modify
             </Button>
           </Box>
         </DialogContent>

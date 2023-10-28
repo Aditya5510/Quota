@@ -4,6 +4,8 @@ import axios from "axios";
 import Header from "../components/Header";
 import QuoteCards from "../components/QuoteCards";
 import { Container, Typography } from "@mui/material";
+import { Skeleton, Box } from "@mui/material";
+import CreateBlog from "../components/CreateBlog";
 
 const YourQuotes = () => {
   const [blogs, setblogs] = useState([]);
@@ -35,18 +37,30 @@ const YourQuotes = () => {
     <div className="Home-main-container2">
       <Header />
       <Container sx={{ mt: "4rem" }}>
-        <Typography
-          variant="h4"
-          sx={{
-            color: "Black",
-            display: "flex",
-            width: "100%",
-            justifyContent: "flex-start",
-            ml: "1.5rem",
+        <Box sx={{ display: "flex" }}>
+          <Typography
+            variant="h4"
+            sx={{
+              color: "Black",
+              display: "flex",
+              width: "100%",
+              justifyContent: "flex-start",
+              ml: "1.5rem",
+              alignItems: "center",
+            }}
+          >
+            Your Quotes
+          </Typography>
+          <CreateBlog />
+        </Box>
+        <div
+          style={{
+            width: "97%",
+            height: "2%",
+            border: "0.4px solid black",
+            marginLeft: "15px",
           }}
-        >
-          Your Quotes
-        </Typography>
+        />
       </Container>
       <Container
         sx={{
@@ -58,8 +72,20 @@ const YourQuotes = () => {
           mt: "2rem",
         }}
       >
-        {loading == "true" && error == "true" ? (
-          <p>loading...</p>
+        {loading ? (
+          <Skeleton
+            variant="rectangular"
+            animation="wave"
+            sx={{
+              width: "100%",
+              height: "100vh",
+              bgcolor: "grey.900",
+              borderRadius: "10px",
+              opacity: "0.3",
+            }}
+          />
+        ) : blogs.length === 0 ? (
+          <h2>You dont have any Quotes,Please add one!</h2>
         ) : (
           blogs.map((blog) => (
             <QuoteCards

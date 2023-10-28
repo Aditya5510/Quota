@@ -8,7 +8,16 @@ import {
   Tooltip,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
+
+import axios from "axios";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import ModifyBlog from "./ModifyBlog";
+
 const QuoteCards = ({
   username,
   profile,
@@ -18,8 +27,33 @@ const QuoteCards = ({
   isUser,
   id,
 }) => {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const img =
     "https://images.unsplash.com/photo-1614027164847-1b28cfe1df60?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGlvbiUyMGhlYWR8ZW58MHx8MHx8fDA%3D";
+
+  const handleDelete = async () => {
+    try {
+      const { data } = await axios.delete(`/api/v1/blog/delete-blog/${id}`);
+      if (data?.success) {
+        handleClose();
+        alert("Quote deleted successfully");
+
+        window.location.reload();
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <>
       <Box
@@ -98,18 +132,38 @@ const QuoteCards = ({
           >
             {isUser && (
               <>
-                <Tooltip title={"Delete Quote"}>
+                <div>
                   <IconButton
-                    sx={{ position: "absolute", top: "0.1px", right: "0.1px" }}
+                    onClick={handleClickOpen}
+                    sx={{
+                      position: "absolute",
+                      top: "0.1px",
+                      right: "0.1px",
+                    }}
                   >
-                    <DeleteIcon sx={{ color: "#df3f3fe3" }} />
-                  </IconButton>
-                </Tooltip>
-                <IconButton
-                  sx={{ position: "absolute", top: "0.1px", left: "0.1px" }}
-                >
-                  <AutoFixHighIcon sx={{ color: "#f0e332bf" }} />
-                </IconButton>
+                    <Tooltip title={"Delete Quote"}>
+                      <DeleteIcon sx={{ color: "#df3f3fe3" }} />
+                    </Tooltip>
+                  </IconButton>{" "}
+                  <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      {" Are you sure you want to delete this quote?"}
+                    </DialogTitle>
+                    <DialogContent></DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleClose}>No</Button>
+                      <Button onClick={handleDelete} autoFocus>
+                        Yes
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </div>
+                <ModifyBlog id={id} />
               </>
             )}
             <Typography

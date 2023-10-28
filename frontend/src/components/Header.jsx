@@ -21,6 +21,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import { useDispatch } from "react-redux";
 import { authActions } from "../Redux/Store";
 import { useNavigate } from "react-router-dom";
+import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 
 function Header() {
   const isLogi = useSelector((state) => state.isLogin);
@@ -57,7 +58,11 @@ function Header() {
   };
 
   const isLogin = useSelector((state) => state.isLogin);
-  // console.log(isLogin);
+
+  console.log(localStorage.getItem("userName"));
+  const [userName, setUsername] = React.useState(
+    localStorage.getItem("userName")
+  );
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -126,31 +131,21 @@ function Header() {
                 <MenuItem onClick={handleCloseNavMenu}>
                   <Button
                     textAlign="center"
-                    startIcon={<HomeIcon />}
+                    startIcon={<ImportContactsIcon sx={{ color: "#4ADB9A" }} />}
                     LinkComponent={Link}
                     to="/"
                   >
-                    Home
+                    AllQuotes
                   </Button>
                 </MenuItem>
                 <MenuItem onClick={handleCloseNavMenu}>
                   <Button
                     textAlign="center"
-                    startIcon={<FormatQuoteIcon />}
+                    startIcon={<FormatQuoteIcon sx={{ color: "#4ADB9A" }} />}
                     LinkComponent={Link}
                     to="your-quotes"
                   >
                     YourQuotes
-                  </Button>
-                </MenuItem>
-                <MenuItem onClick={handleCloseNavMenu}>
-                  <Button
-                    textAlign="center"
-                    startIcon={<ImportContactsIcon />}
-                    LinkComponent={Link}
-                    to="all-quotes"
-                  >
-                    ALLQuotes
                   </Button>
                 </MenuItem>
               </Menu>
@@ -178,7 +173,7 @@ function Header() {
                 textDecoration: "none",
               }}
             >
-              Quota
+              QuotA
             </Typography>
             <Box
               sx={{
@@ -202,7 +197,7 @@ function Header() {
                     gap: "0.2rem",
                   }}
                 >
-                  <HomeIcon /> Home
+                  <ImportContactsIcon sx={{ color: "#4ADB9A" }} /> AllQuotes
                 </Button>
               </Link>
               <Link to={"/your-quotes"} style={{ textDecoration: "none" }}>
@@ -216,23 +211,7 @@ function Header() {
                     alignItems: "center",
                   }}
                 >
-                  <FormatQuoteIcon /> YourQuotes
-                </Button>
-              </Link>
-              <Link to={"/all-quotes"} style={{ textDecoration: "none" }}>
-                <Button
-                  onClick={handleCloseNavMenu}
-                  sx={{
-                    my: 2,
-                    color: "white",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "0.1rem",
-                  }}
-                >
-                  <ImportContactsIcon />
-                  AllQuotes
+                  <FormatQuoteIcon sx={{ color: "#4ADB9A" }} /> YourQuotes
                 </Button>
               </Link>
             </Box>
@@ -240,7 +219,11 @@ function Header() {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src={Logo} />
+                  {/* <Avatar alt="Remy Sharp" src={Logo} /> */}
+
+                  <InsertEmoticonIcon
+                    sx={{ height: "35px", width: "35px", color: "#4ADB9A" }}
+                  />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -260,12 +243,34 @@ function Header() {
                 onClose={handleCloseUserMenu}
               >
                 <MenuItem onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">Account</Typography>
+                  <Box>{userName && <>{userName}</>}</Box>
                 </MenuItem>
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <Typography onClick={handleLogout} textAlign="center">
-                    Logout
-                  </Typography>
+                <MenuItem
+                  onClick={handleCloseUserMenu}
+                  sx={{ backgroundColor: "#4ADB9A", borderRadius: "1px" }}
+                >
+                  {isLogi ? (
+                    <>
+                      {" "}
+                      <Typography
+                        onClick={handleLogout}
+                        textAlign="center"
+                        color={"secondary"}
+                      >
+                        logout
+                      </Typography>
+                    </>
+                  ) : (
+                    <>
+                      {" "}
+                      <Link
+                        to={"/login"}
+                        style={{ textDecoration: "none", color: "black" }}
+                      >
+                        <Typography>login</Typography>
+                      </Link>
+                    </>
+                  )}
                 </MenuItem>
               </Menu>
             </Box>
