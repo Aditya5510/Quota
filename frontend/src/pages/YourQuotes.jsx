@@ -12,6 +12,7 @@ const YourQuotes = () => {
   const [loading, setloading] = useState(true);
   const [error, seterror] = useState(null);
   const [userName, setusername] = useState("");
+  const [blogimg, setblogimg] = useState(null);
 
   const getyourblog = async () => {
     try {
@@ -20,6 +21,7 @@ const YourQuotes = () => {
       const { data } = await axios.get(`/api/v1/blog/user-blog/${id}`);
       if (data?.success) {
         setblogs(data?.userblog.blogs);
+        setblogimg(data?.userblog.Profile);
         setusername(data?.userblog.username);
         setloading(false);
       }
@@ -92,7 +94,7 @@ const YourQuotes = () => {
               Quote={blog.content}
               Title={blog.title}
               createdAt={blog.createdAt.slice(0, 10)}
-              profile={blog.profile}
+              profile={blogimg}
               username={userName}
               id={blog._id}
               isUser={true}

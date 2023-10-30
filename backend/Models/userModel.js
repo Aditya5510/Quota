@@ -16,6 +16,10 @@ const UserSchema = new mongoose.Schema({
         type: "String",
         required: [true, "Please add a password"],
     },
+    Profile: {
+        type: "String",
+        required: [false, "Please add image"],
+    },
     blogs: [{
         type: mongoose.Types.ObjectId,
         ref:"Blog"

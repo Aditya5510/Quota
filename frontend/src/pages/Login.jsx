@@ -1,10 +1,9 @@
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
+// import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+
 import { Link } from "react-router-dom";
 
 import Grid from "@mui/material/Grid";
@@ -46,6 +45,7 @@ export default function Login() {
       } else {
         if (data.message === "user not regisred") {
           alert("User not registered,Please register first");
+          navigate("/signup");
         }
       }
     } catch (error) {

@@ -22,7 +22,7 @@ const getAllUsers = async (req, res) => {
 
 const RegisterC = async (req, res) => {
     try {
-        const { username, email, password } = req.body
+        const { username, email, password,Profile } = req.body
         //validate the data
 
         if (!username || !email || !password) {
@@ -41,7 +41,7 @@ const RegisterC = async (req, res) => {
         const hashed_password = bcrypt.hashSync(password, 10)
 
 
-        const user = new userModel({ username, email, password: hashed_password })
+        const user = new userModel({ username, email, password: hashed_password,Profile })
         await user.save()
         
         return res.status(201).send({ message: "User created successfully", success: true, user })

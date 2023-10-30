@@ -17,6 +17,29 @@ import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const [file, setFile] = React.useState(null);
+  const [image, setImage] = React.useState(null);
+
+  async function imageUploader(event) {
+    setFile(event.target.files[0].name);
+
+    const formData = new FormData();
+    formData.append("file", event.target.files[0]);
+    formData.append("ml_default", "image");
+    // console.log(file);ssss
+    formData.append("upload_preset", "new-upload");
+
+    try {
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dfd7uzelx/image/upload",
+        formData
+      );
+      setImage(response.data.secure_url);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newdata = new FormData(event.currentTarget);
@@ -24,12 +47,14 @@ export default function SignUp() {
     // console.log(data.get("firstName"));
 
     try {
+      // console.log(image);
       const { data } = await axios.post("/api/v1/user/register", {
         username: newdata.get("firstName"),
         email: newdata.get("email"),
         password: newdata.get("password"),
+        Profile: image,
       });
-      //   console.log(newdata.status);
+      console.log(data);
       if (data.success) {
         alert("Registrastion successFull,please login ");
         navigate("/login");
@@ -115,6 +140,24 @@ export default function SignUp() {
                 />
               </Grid>
             </Grid>
+
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <TextField
+                name="upload-photo"
+                type="file"
+                sx={{ mt: "1rem" }}
+                onChange={imageUploader}
+              />
+            </Grid>
+
             <Button
               type="submit"
               fullWidth

@@ -19,15 +19,17 @@ const Home = () => {
   const getAllBlogs = async () => {
     try {
       const { data } = await axios.get(`/api/v1/blog/all-blog?_page=${page}`);
+
       if (data?.success) {
         setloading(false);
         // console.log(data?.blogs);
         setblogCount(data?.blogCount);
         setblogs(data?.blogs);
+        // console.log(blogs.user.Profile);
       }
     } catch (error) {
       seterror(error);
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -88,14 +90,14 @@ const Home = () => {
             }}
           />
         ) : blogCount === 0 ? (
-          <h1>No one has Added any Quotes Just yet.</h1>
+          <h2>No one has Added any Quotes Just yet.</h2>
         ) : (
           blogs.map((blog) => (
             <QuoteCard
               Quote={blog.content}
               Title={blog.title}
               createdAt={blog.createdAt.slice(0, 10)}
-              profile={blog.profile}
+              profile={blog.user.Profile}
               username={blog.user.username}
               id={blog._id}
               isUser={localStorage.getItem("userId") === blog.user._id}
