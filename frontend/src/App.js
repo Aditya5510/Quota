@@ -32,6 +32,7 @@ function App() {
   // console.log(isLogi)
   return (
     <div >
+      {/* <MovingBackground /> */}
       <ThemeProvider theme={theme}>  <BrowserRouter>
         {/* <Header /> */}
         <Routes>

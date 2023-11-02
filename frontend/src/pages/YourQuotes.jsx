@@ -77,7 +77,9 @@ const YourQuotes = () => {
         {loading ? (
           <Skeleton
             variant="rectangular"
-            animation="wave"
+            animation="pulse"
+            animationDirection="right"
+            animationduration="1000"
             sx={{
               width: "100%",
               height: "100vh",

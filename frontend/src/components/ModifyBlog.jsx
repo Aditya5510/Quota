@@ -67,6 +67,7 @@ export default function ModifyBlog({ id }) {
       console.log(e);
     }
   };
+
   return (
     <div>
       <Tooltip title="Modify this Quote">

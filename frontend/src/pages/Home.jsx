@@ -3,7 +3,7 @@ import Header from "../components/Header";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import QuoteCard from "../components/QuoteCards";
-import { Container, TextField, Typography } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import CreateBlog from "../components/CreateBlog";
 import { Box } from "@mui/material";
 import Skeleton from "@mui/material/Skeleton";
@@ -13,12 +13,22 @@ const Home = () => {
   const [blogs, setblogs] = useState([]);
   const [loading, setloading] = useState(true);
   const [error, seterror] = useState(null);
-  const [page, setpage] = useState(1);
+  const [page, setPage] = useState(1);
   const [blogCount, setblogCount] = useState(0);
+  const blogsPerPage = 6;
 
   const getAllBlogs = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
     try {
-      const { data } = await axios.get(`/api/v1/blog/all-blog?_page=${page}`);
+      const { data } = await axios.get(
+        `/api/v1/blog/all-blog?page=${page}&limit=${blogsPerPage}`
+      );
 
       if (data?.success) {
         setloading(false);
@@ -60,8 +70,8 @@ const Home = () => {
         <div
           style={{
             width: "97%",
-            height: "2%",
-            border: "0.4px solid black",
+            height: "0.01%",
+            border: "0.01px solid black",
             marginLeft: "15px",
           }}
         />
@@ -80,7 +90,7 @@ const Home = () => {
         {loading ? (
           <Skeleton
             variant="rectangular"
-            animation="wave"
+            animation="pulse"
             sx={{
               width: "100%",
               height: "100vh",
@@ -113,18 +123,16 @@ const Home = () => {
           }}
         />
         <Container sx={{ justifyContent: "center", display: "flex" }}>
-          <Pagination
-            count={4}
-            variant="outlined"
-            color={"error"}
-            shape="rounded"
-            size="large"
-            showFirstButton
-            defaultPage={page}
-            showLastButton
-            sx={{ height: "auto", mb: "20px" }}
-            onChange={(e, value) => setpage(value)}
-          />
+          {blogCount > 0 && (
+            <Pagination
+              count={Math.ceil(blogCount / blogsPerPage)} // Calculate the total number of pages based on the count of blog posts and posts per page
+              page={page}
+              onChange={(e, value) => setPage(value)}
+              size="large"
+              color="primary"
+              sx={{ height: "auto", mb: "20px" }}
+            />
+          )}
         </Container>
       </Container>
     </div>

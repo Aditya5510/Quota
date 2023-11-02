@@ -1,7 +1,8 @@
 const express = require('express')
 const userModel = require('../Models/userModel.js')
 const bcrypt = require('bcrypt')
-
+const blogModel = require('../Models/blogModel.js')
+const router = express.Router()
 
 
 //Controllers
@@ -22,7 +23,7 @@ const getAllUsers = async (req, res) => {
 
 const RegisterC = async (req, res) => {
     try {
-        const { username, email, password,Profile } = req.body
+        const { username, email, password, Profile } = req.body
         //validate the data
 
         if (!username || !email || !password) {
@@ -41,11 +42,11 @@ const RegisterC = async (req, res) => {
         const hashed_password = bcrypt.hashSync(password, 10)
 
 
-        const user = new userModel({ username, email, password: hashed_password,Profile })
+        const user = new userModel({ username, email, password: hashed_password, Profile })
         await user.save()
-        
+
         return res.status(201).send({ message: "User created successfully", success: true, user })
-        
+
 
     }
     catch (error) {
@@ -83,25 +84,44 @@ const LoginC = async (req, res) => {
 }
 
 const getCurrentUser = async (req, res) => {
-try{
-    const {id} = req.params
-    const user=await userModel.findOne({id})
-    if (!user) {
-        return res.status(200).send({ message: "user not regisred", success: false })
+    try {
+        const { id } = req.params
+        const user = await userModel.findById(id)
+        if (!user) {
+            return res.status(400).send({ message: "User not found", success: false })
+        }
+        return res.status(200).send({ success: true, user })
+
     }
-    return res.status(200).send({  success: true, user })
-
-}
-catch (error){
-    console.log(error)
-    return res.status(500).send({ message: "Server Error", success: false, error })
-}
+    catch (error) {
+        console.log(error)
+        return res.status(500).send({ message: "Server Error", success: false, error })
+    }
 }
 
+const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await userModel.findById(id);
+
+        if (user) {
+            // Delete the user's blogs
+            await blogModel.deleteMany({ user: user._id });
+
+            // Delete the user
+            await userModel.findByIdAndDelete(id);
+
+            return res.status(200).send({ message: "User deleted successfully", success: true });
+        } else {
+            return res.status(400).send({ message: "User not found", success: false });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({ message: "Error while deleting the user and associated blogs", success: false, error });
+    }
+}
 
 
-
-const router = express.Router()
 
 router.get('/all-users', getAllUsers)//get all users
 
@@ -109,6 +129,8 @@ router.post('/register', RegisterC) //register a user
 
 router.post('/login', LoginC) //login a user
 
-router.get('current-user/:id', getCurrentUser)
+router.get('/current-user/:id', getCurrentUser)
+
+router.delete('/delete-user/:id', deleteUser)
 
 module.exports = router;

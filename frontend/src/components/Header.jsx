@@ -22,6 +22,8 @@ import { useDispatch } from "react-redux";
 import { authActions } from "../Redux/Store";
 import { useNavigate } from "react-router-dom";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
+import axios from "axios";
+import { Alert } from "@mui/material";
 
 function Header() {
   const isLogi = useSelector((state) => state.isLogin);
@@ -34,6 +36,21 @@ function Header() {
       alert("success logout");
       localStorage.clear();
       navigate("/login");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const id = localStorage.getItem("userId");
+      const res = await axios.delete(`/api/v1/user/delete-user/${id}`);
+
+      if (res.data.success) {
+        localStorage.clear();
+        alert("User deleted successfully");
+        navigate("/login");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -65,12 +82,12 @@ function Header() {
   );
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center" }}>
+    <Box sx={{ display: "flex", justifyContent: "center", mt: "10px" }}>
       <AppBar
         position="relative"
         sx={{
           width: { lg: "70vw", md: "70vw", sm: "90vw", xs: "90vw" },
-          borderRadius: "10px",
+          borderRadius: "20px",
         }}
       >
         <Container maxWidth="xl">
@@ -217,15 +234,47 @@ function Header() {
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  {/* <Avatar alt="Remy Sharp" src={Logo} /> */}
+              {isLogi ? (
+                <>
+                  {" "}
+                  <Tooltip title="Open settings">
+                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                      <InsertEmoticonIcon
+                        sx={{ height: "35px", width: "35px", color: "#4ADB9A" }}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <Link to="/login" style={{ textDecoration: "none" }}>
+                    <Tooltip title="Login">
+                      <Typography
+                        sx={{
+                          color: "#45BB87",
+                          fontWeight: "bold",
+                          cursor: "pointer",
+                          borderRadius: "10px",
+                          padding: "6px",
+                          background: "transparent",
+                          opacity: "0.9",
+                          border: "1px solid #50ce97",
+                          transition: "all .2s ease-in-out",
+                          ":hover": {
+                            transform: "scale(1.01)",
+                            background: "#1b1f1d",
+                            colo: "#343435",
+                          },
+                        }}
+                      >
+                        Login
+                      </Typography>
+                    </Tooltip>
+                  </Link>
+                </>
+              )}
 
-                  <InsertEmoticonIcon
-                    sx={{ height: "35px", width: "35px", color: "#4ADB9A" }}
-                  />
-                </IconButton>
-              </Tooltip>
               <Menu
                 sx={{ mt: "45px" }}
                 id="menu-appbar"
@@ -242,35 +291,75 @@ function Header() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <Box>{userName && <>{userName}</>}</Box>
+                <MenuItem
+                  onClick={handleCloseUserMenu}
+                  sx={{ display: "flex", flexDirection: "column" }}
+                >
+                  <Avatar
+                    src={localStorage.getItem("Profile")}
+                    sx={{ width: "50px", height: "50px" }}
+                  />
+
+                  <Box>{isLogi && <>{userName}</>}</Box>
                 </MenuItem>
                 <MenuItem
                   onClick={handleCloseUserMenu}
-                  sx={{ backgroundColor: "#4ADB9A", borderRadius: "1px" }}
+                  sx={{ backgroundColor: "#ffffff", borderRadius: "1px" }}
                 >
-                  {isLogi ? (
-                    <>
-                      {" "}
-                      <Typography
-                        onClick={handleLogout}
-                        textAlign="center"
-                        color={"secondary"}
-                      >
-                        logout
-                      </Typography>
-                    </>
-                  ) : (
-                    <>
-                      {" "}
-                      <Link
-                        to={"/login"}
-                        style={{ textDecoration: "none", color: "black" }}
-                      >
-                        <Typography>login</Typography>
-                      </Link>
-                    </>
-                  )}
+                  <Typography
+                    onClick={handleLogout}
+                    sx={{
+                      color: "#45BB87",
+                      fontWeight: "bold",
+                      width: "100%",
+                      cursor: "pointer",
+                      borderRadius: "10px",
+                      padding: "6px",
+                      background: "transparent",
+                      justifyContent: "center",
+                      display: "flex",
+                      opacity: "0.9",
+                      border: "1px solid #50ce97",
+                      transition: "all .2s ease-in-out",
+                      ":hover": {
+                        transform: "scale(1.01)",
+                        background: "#1b1f1d",
+                        color: "#ffffff",
+                      },
+                    }}
+                  >
+                    logout
+                  </Typography>
+                </MenuItem>
+                <MenuItem
+                  onClick={handleCloseUserMenu}
+                  sx={{ backgroundColor: "#ffffff", borderRadius: "1px" }}
+                >
+                  <Typography
+                    onClick={handleDelete}
+                    sx={{
+                      color: "#000000",
+                      backgroundColor: "#232222",
+                      fontWeight: "bold",
+                      width: "100%",
+                      cursor: "pointer",
+                      borderRadius: "10px",
+                      padding: "6px",
+                      background: "transparent",
+                      justifyContent: "center",
+                      display: "flex",
+                      opacity: "0.9",
+                      border: "1px solid #ce8250",
+                      transition: "all .2s ease-in-out",
+                      ":hover": {
+                        transform: "scale(1.01)",
+                        background: "#080808",
+                        color: "#d31b1b",
+                      },
+                    }}
+                  >
+                    Delete
+                  </Typography>
                 </MenuItem>
               </Menu>
             </Box>

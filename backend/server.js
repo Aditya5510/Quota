@@ -15,9 +15,11 @@ const BlogRoutes = require('./Routes/BlogRoutes.js')
 const app = express()
 connectDB()
 app.use(cors(
-   { origin:["https://deploy-mern-1whq.vercel.app"],
-    methods:["GET", "POST", "PUT","DELETE"],
-    Credential:true}
+    {
+        origin: ["https://deploy-mern-1whq.vercel.app"],
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        credentials: true
+    }
 ))
 app.use(express.json())
 app.use(morgan('dev'))

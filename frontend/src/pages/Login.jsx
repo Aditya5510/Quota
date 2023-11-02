@@ -38,6 +38,7 @@ export default function Login() {
       if (data.success) {
         localStorage.setItem("userId", data?.user._id);
         localStorage.setItem("userName", data?.user.username);
+        localStorage.setItem("Profile", data?.user.Profile);
 
         dispatch(authActions.login());
         alert("Loggin you in");

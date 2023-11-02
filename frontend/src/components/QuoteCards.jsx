@@ -107,18 +107,13 @@ const QuoteCards = ({
               position: "absolute",
               width: "100%",
               height: "100%",
-              inset: "0",
-
-              // zIndex: '-1',
-              //   backgroundImage: `url(${img})`,
+              overflowY: "scroll ",
               backgroundColor: "#4E4E4E",
               backgroundSize: "cover",
               backgroundPosition: "center",
               display: "flex",
               justifyContent: "center",
-              alignItems: "center",
-              fontWeight: "bold",
-              fontSize: "20px",
+
               boxShadow: "0 0 5px rgba(0, 0,0,0.5)",
               transition: "all .1s ease-in-out",
 
@@ -168,7 +163,12 @@ const QuoteCards = ({
             )}
             <Typography
               variant="h5"
-              sx={{ width: "90%", textAlign: "center", wordWrap: "break-word" }}
+              sx={{
+                width: "90%",
+                textAlign: "center",
+                wordWrap: "break-word",
+                paddingTop: "1rem",
+              }}
             >
               {Quote}
             </Typography>

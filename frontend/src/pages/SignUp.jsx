@@ -26,7 +26,7 @@ export default function SignUp() {
     const formData = new FormData();
     formData.append("file", event.target.files[0]);
     formData.append("ml_default", "image");
-    // console.log(file);ssss
+  
     formData.append("upload_preset", "new-upload");
 
     try {
@@ -47,7 +47,7 @@ export default function SignUp() {
     // console.log(data.get("firstName"));
 
     try {
-      // console.log(image);
+      console.log(image);
       const { data } = await axios.post("/api/v1/user/register", {
         username: newdata.get("firstName"),
         email: newdata.get("email"),
