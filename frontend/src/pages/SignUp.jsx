@@ -19,14 +19,16 @@ export default function SignUp() {
   const navigate = useNavigate();
   const [file, setFile] = React.useState(null);
   const [image, setImage] = React.useState(null);
+  const [suck, setSuck] = React.useState(true);
 
   async function imageUploader(event) {
+    setSuck(false);
     setFile(event.target.files[0].name);
 
     const formData = new FormData();
     formData.append("file", event.target.files[0]);
     formData.append("ml_default", "image");
-  
+
     formData.append("upload_preset", "new-upload");
 
     try {
@@ -35,6 +37,9 @@ export default function SignUp() {
         formData
       );
       setImage(response.data.secure_url);
+      if (response.data.secure_url) {
+        setSuck(true);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -60,7 +65,7 @@ export default function SignUp() {
         navigate("/login");
       }
     } catch (error) {
-      alert("wrong password");
+      alert("Server Error");
       // console.log(error);
     }
   };
@@ -79,7 +84,7 @@ export default function SignUp() {
       <Container
         component="main"
         sx={{
-          border: "0.1px solid black",
+          border: "0.01px solid black",
           borderRadius: "10px",
           maxWidth: { lg: "30vw", md: "30", sm: "80vw", xs: "85vw" },
         }}
@@ -163,6 +168,7 @@ export default function SignUp() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={!suck}
             >
               Sign Up
             </Button>

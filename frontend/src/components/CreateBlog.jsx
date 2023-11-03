@@ -14,47 +14,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import CreateIcon from "@mui/icons-material/Create";
 
-function Prompt() {
-  const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Open alert dialog
-      </Button>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Use Google's location service?"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
-          <Button onClick={handleClose} autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  );
-}
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
@@ -101,12 +61,13 @@ export default function CreateBlog() {
         <IconButton variant="outlined" onClick={handleClickOpen}>
           <AddCircleIcon
             sx={{
-              height: "50px",
-              width: "50px",
+              height: "40px",
+              width: "40px",
               color: "#343435",
               backgroundColor: " #4ADB9A",
               borderRadius: "500px",
               padding: "1px",
+             
             }}
           />
         </IconButton>

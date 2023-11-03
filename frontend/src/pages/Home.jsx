@@ -15,7 +15,7 @@ const Home = () => {
   const [error, seterror] = useState(null);
   const [page, setPage] = useState(1);
   const [blogCount, setblogCount] = useState(0);
-  const blogsPerPage =6;
+  const blogsPerPage = 6;
 
   const getAllBlogs = async () => {
     const token = localStorage.getItem("token");
@@ -103,7 +103,9 @@ const Home = () => {
             }}
           />
         ) : blogCount === 0 ? (
-          <h2>No one has Added any Quotes Just yet.</h2>
+          <Box sx={{ display: "flex", justifyContent: "center",alignItems:"center" }}>
+            <h2>No one has Added any Quotes Just yet.</h2>
+          </Box>
         ) : (
           blogs.map((blog) => (
             <QuoteCard
