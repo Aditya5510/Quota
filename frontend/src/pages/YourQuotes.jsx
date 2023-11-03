@@ -27,7 +27,7 @@ const YourQuotes = () => {
       }
     } catch (error) {
       seterror(error);
-      console.log(error);
+      // console.log(error);
     }
   };
 

@@ -13,23 +13,34 @@ const router = express.Router()
 
 const getAllblog = async (req, res) => {
     try {
-        const blogs = await blogModel.find({}).populate("user")
-        if (!blogs) {
-            return res.satatus(200).send({ message: "No blog found", success: false })
-        }
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 6;
+        // Get the requested page from the query parameters, default to page 1
+        // Set the number of blog posts per page (adjust as needed)
 
-        res.status(200).send({
-            blogCount: blogs.length,
-            message: "All blogs list", success: true, blogs
-        })
+        const skip = (page - 1) * limit; // Calculate the number of documents to skip
 
+        // Query the database to fetch paginated blog posts
+        const blogs = await blogModel
+            .find()
+            .skip(skip)
+            .limit(limit)
+            .populate('user'); // You can use `.populate` if you want to populate the "user" field
+
+        const blogCount = await blogModel.countDocuments(); // Get the total count of blog posts
+
+        res.status(200).json({
+            success: true,
+            blogCount,
+            currentPage: page,
+            totalPages: Math.ceil(blogCount / limit),
+            blogs,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server Error', success: false, error });
     }
-    catch (error) {
-        console.log(error)
-        return res.status(500).send({ message: "Server Error", success: false, error })
-    }
-
-}
+};
 
 const addBlog = async (req, res) => {
     try {

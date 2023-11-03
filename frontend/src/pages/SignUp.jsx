@@ -54,14 +54,14 @@ export default function SignUp() {
         password: newdata.get("password"),
         Profile: image,
       });
-      console.log(data);
+      // console.log(data);
       if (data.success) {
         alert("Registrastion successFull,please login ");
         navigate("/login");
       }
     } catch (error) {
       alert("wrong password");
-      console.log(error);
+      // console.log(error);
     }
   };
 

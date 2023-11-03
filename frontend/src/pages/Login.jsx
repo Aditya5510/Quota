@@ -51,7 +51,7 @@ export default function Login() {
       }
     } catch (error) {
       alert("Internal Server error ,please try again later.");
-      console.log(error);
+      // console.log(error);
     }
   };
 

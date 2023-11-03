@@ -15,7 +15,7 @@ const Home = () => {
   const [error, seterror] = useState(null);
   const [page, setPage] = useState(1);
   const [blogCount, setblogCount] = useState(0);
-  const blogsPerPage = 6;
+  const blogsPerPage =6;
 
   const getAllBlogs = async () => {
     const token = localStorage.getItem("token");
@@ -27,11 +27,14 @@ const Home = () => {
 
     try {
       const { data } = await axios.get(
-        `/api/v1/blog/all-blog?page=${page}&limit=${blogsPerPage}`
+        `/api/v1/blog/all-blog?page=${page}&limit=${blogsPerPage}`,
+        config
       );
-
+      // console.log(data);
+      // console.log(data.blogs);
       if (data?.success) {
         setloading(false);
+        // console.log(loading);
         // console.log(data?.blogs);
         setblogCount(data?.blogCount);
         setblogs(data?.blogs);

@@ -344,7 +344,7 @@ function Header() {
                       width: "100%",
                       cursor: "pointer",
                       borderRadius: "10px",
-                      padding: "6px",
+                      padding: "10px",
                       background: "transparent",
                       justifyContent: "center",
                       display: "flex",
@@ -358,7 +358,7 @@ function Header() {
                       },
                     }}
                   >
-                    Delete
+                    Delete Your Account
                   </Typography>
                 </MenuItem>
               </Menu>
