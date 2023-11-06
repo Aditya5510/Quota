@@ -6,6 +6,7 @@ import QuoteCards from "../components/QuoteCards";
 import { Container, Typography } from "@mui/material";
 import { Skeleton, Box } from "@mui/material";
 import CreateBlog from "../components/CreateBlog";
+import Profile from "../components/Profile";
 
 const YourQuotes = () => {
   const [blogs, setblogs] = useState([]);
@@ -13,6 +14,7 @@ const YourQuotes = () => {
   const [error, seterror] = useState(null);
   const [userName, setusername] = useState("");
   const [blogimg, setblogimg] = useState(null);
+  const [Email, setemail] = useState("");
 
   const getyourblog = async () => {
     try {
@@ -23,6 +25,7 @@ const YourQuotes = () => {
         setblogs(data?.userblog.blogs);
         setblogimg(data?.userblog.Profile);
         setusername(data?.userblog.username);
+        setemail(data?.userblog.email);
         setloading(false);
       }
     } catch (error) {
@@ -38,6 +41,33 @@ const YourQuotes = () => {
   return (
     <div className="Home-main-container2">
       <Header />
+      {loading ? (
+        <>
+          {" "}
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Skeleton
+              variant="rectangular"
+              animation="pulse"
+              animationDirection="right"
+              animationduration="1000"
+              sx={{
+                width: { lg: "50%", md: "50%", sm: "80%", xs: "90%" },
+                height: { lg: "20vh", md: "30vh", sm: "40vh", xs: "40vh" },
+                mt: { lg: "19vh", md: "20vh", sm: "10vh", xs: "10vh" },
+                bgcolor: "grey.900",
+                borderRadius: "10px",
+                opacity: "0.3",
+              }}
+            />
+          </Box>
+        </>
+      ) : (
+        <>
+          {" "}
+          <Profile Profile={blogimg} username={userName} email={Email} />
+        </>
+      )}
+
       <Container sx={{ mt: "4rem" }}>
         <Box sx={{ display: "flex" }}>
           <Typography

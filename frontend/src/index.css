@@ -16,14 +16,21 @@ body {
     clip-path: polygon(89.02% 81.26%,51.87% 66.90%,18.74% 89.02%,33.10% 51.87%,10.98% 18.74%,48.13% 33.10%,81.26% 10.98%,66.90% 48.13%);
 
 }
-
+.star1{
+  position: absolute;
+    width: 200px;
+    aspect-ratio: 1;
+    clip-path: polygon(89.02% 81.26%,51.87% 66.90%,18.74% 89.02%,33.10% 51.87%,10.98% 18.74%,48.13% 33.10%,81.26% 10.98%,66.90% 48.13%);
+    animation: star1 10s ease-in-out infinite;
+}
 body{
   background-image:linear-gradient(-45deg, #e3e3e368, #bea7b091, #d3d8db, #838b89, #ae9f9f70);
-  background-size: 500%;
+  background-size: 400%;
   animation: bg 15s ease-in-out infinite;
   height: auto;
   width: 100vw;
   min-height: 100vh;
+  overflow-x: hidden;
   /* background-position: 0% 50%; */
 }
 @keyframes bg {
@@ -37,4 +44,36 @@ body{
 background-position: 0% 50%;
   }
 }
+body::-webkit-scrollbar {
+  width: 8px;               /* width of the entire scrollbar */
+}
 
+body::-webkit-scrollbar-track {
+  background: #343435;        /* color of the tracking area */
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #4ADB9A;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 3px solid rgb(255, 255, 255);  /* creates padding around scroll thumb */
+}
+.Quote::-webkit-scrollbar {
+  width: 10px;               /* width of the entire scrollbar */
+}
+.Quote::-webkit-scrollbar-track{
+  background: #b5b5b6;              /* width of the entire scrollbar */
+}
+.Quote::-webkit-scrollbar-thumb{
+  background-color: #4ADB9A;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 3px solid rgb(255, 255, 255);            /* width of the entire scrollbar */
+}
+
+
+.Dialogue{
+  background-image:linear-gradient(-45deg, #e3e3e368, #bea7b091, #d3d8db, #838b89, #ae9f9f70);
+  background-size: 400%;
+  animation: bg 15s ease-in-out infinite;
+  height: auto;
+  overflow-x: hidden;
+}

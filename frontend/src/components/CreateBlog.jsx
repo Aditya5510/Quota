@@ -14,8 +14,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import CreateIcon from "@mui/icons-material/Create";
 
-
-
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
@@ -49,12 +47,13 @@ export default function CreateBlog() {
       if (data?.success) {
         console.log(data);
         alert("Blog added successfully");
-        navigate("/your-quotes");
+        window.location.reload();
       }
     } catch (e) {
       console.log(e);
     }
   };
+
   return (
     <div>
       <Tooltip title="Add a Quote">
@@ -67,7 +66,6 @@ export default function CreateBlog() {
               backgroundColor: " #4ADB9A",
               borderRadius: "500px",
               padding: "1px",
-             
             }}
           />
         </IconButton>

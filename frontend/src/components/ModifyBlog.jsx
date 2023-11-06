@@ -13,6 +13,7 @@ import { TextField, Box } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import CreateIcon from "@mui/icons-material/Create";
+import AutoFixHighRoundedIcon from "@mui/icons-material/AutoFixHighRounded";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
@@ -71,11 +72,15 @@ export default function ModifyBlog({ id }) {
   return (
     <div>
       <Tooltip title="Modify this Quote">
-        <IconButton
-          onClick={handleClickOpen}
-          sx={{ position: "absolute", top: "0.1px", left: "0.1px" }}
-        >
-          <AutoFixHighIcon sx={{ color: "#ad840bbd" }} />
+        <IconButton onClick={handleClickOpen}>
+          <AutoFixHighRoundedIcon
+            sx={{
+              color: "#4ADB9A",
+              border: "1px solid black",
+              borderRadius: "50%",
+              padding: "5px",
+            }}
+          />
         </IconButton>
       </Tooltip>
       <Dialog

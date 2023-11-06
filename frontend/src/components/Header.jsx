@@ -18,17 +18,23 @@ import Logo from "../Images/logo (2).png";
 import ImportContactsIcon from "@mui/icons-material/ImportContacts";
 import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
 import HomeIcon from "@mui/icons-material/Home";
+import PeopleIcon from "@mui/icons-material/People";
 import { useDispatch } from "react-redux";
 import { authActions } from "../Redux/Store";
 import { useNavigate } from "react-router-dom";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import axios from "axios";
-import { Alert } from "@mui/material";
+import Person2Icon from "@mui/icons-material/Person2";
 
 function Header() {
   const isLogi = useSelector((state) => state.isLogin);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  if (localStorage.getItem("userId") !== null) {
+    dispatch(authActions.login());
+  }
 
   const handleLogout = () => {
     try {
@@ -36,21 +42,6 @@ function Header() {
       alert("success logout");
       localStorage.clear();
       navigate("/login");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      const id = localStorage.getItem("userId");
-      const res = await axios.delete(`/api/v1/user/delete-user/${id}`);
-
-      if (res.data.success) {
-        localStorage.clear();
-        alert("User deleted successfully");
-        navigate("/login");
-      }
     } catch (error) {
       console.log(error);
     }
@@ -158,11 +149,21 @@ function Header() {
                 <MenuItem onClick={handleCloseNavMenu}>
                   <Button
                     textAlign="center"
-                    startIcon={<FormatQuoteIcon sx={{ color: "#4ADB9A" }} />}
+                    startIcon={<Person2Icon sx={{ color: "#4ADB9A" }} />}
                     LinkComponent={Link}
                     to="your-quotes"
                   >
-                    YourQuotes
+                    Profile
+                  </Button>
+                </MenuItem>
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Button
+                    textAlign="center"
+                    startIcon={<PeopleIcon sx={{ color: "#4ADB9A" }} />}
+                    LinkComponent={Link}
+                    to="Social"
+                  >
+                    Social
                   </Button>
                 </MenuItem>
               </Menu>
@@ -228,7 +229,22 @@ function Header() {
                     alignItems: "center",
                   }}
                 >
-                  <FormatQuoteIcon sx={{ color: "#4ADB9A" }} /> YourQuotes
+                  <Person2Icon sx={{ color: "#4ADB9A" }} />
+                  Profile
+                </Button>
+              </Link>
+              <Link to={"/Social"} style={{ textDecoration: "none" }}>
+                <Button
+                  onClick={handleCloseNavMenu}
+                  sx={{
+                    my: 2,
+                    color: "white",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <PeopleIcon sx={{ color: "#4ADB9A" }} /> Social
                 </Button>
               </Link>
             </Box>
@@ -329,36 +345,6 @@ function Header() {
                     }}
                   >
                     logout
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  onClick={handleCloseUserMenu}
-                  sx={{ backgroundColor: "#ffffff", borderRadius: "1px" }}
-                >
-                  <Typography
-                    onClick={handleDelete}
-                    sx={{
-                      color: "#000000",
-                      backgroundColor: "#232222",
-                      fontWeight: "bold",
-                      width: "100%",
-                      cursor: "pointer",
-                      borderRadius: "10px",
-                      padding: "10px",
-                      background: "transparent",
-                      justifyContent: "center",
-                      display: "flex",
-                      opacity: "0.9",
-                      border: "1px solid #ce8250",
-                      transition: "all .2s ease-in-out",
-                      ":hover": {
-                        transform: "scale(1.01)",
-                        background: "#080808",
-                        color: "#d31b1b",
-                      },
-                    }}
-                  >
-                    Delete Your Account
                   </Typography>
                 </MenuItem>
               </Menu>

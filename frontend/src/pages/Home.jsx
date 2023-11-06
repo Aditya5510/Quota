@@ -19,6 +19,11 @@ const Home = () => {
 
   const getAllBlogs = async () => {
     const token = localStorage.getItem("token");
+
+    //65453afa26e67de416a4df4a
+    //65453afa26e67de416a4df4a
+    // console.log(localStorage.getItem("userId"));
+    const userId = localStorage.getItem("userId");
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -27,18 +32,16 @@ const Home = () => {
 
     try {
       const { data } = await axios.get(
-        `/api/v1/blog/all-blog?page=${page}&limit=${blogsPerPage}`,
-        config
+        `/api/v1/blog/all-blog?page=${page}&limit=${blogsPerPage}&cuser=${userId}`
       );
+      // console.log(data.blogs[0].likedByCurrentUser);
+      // console.log(data.blogs[0].likes);
       // console.log(data);
       // console.log(data.blogs);
       if (data?.success) {
         setloading(false);
-        // console.log(loading);
-        // console.log(data?.blogs);
         setblogCount(data?.blogCount);
         setblogs(data?.blogs);
-        // console.log(blogs.user.Profile);
       }
     } catch (error) {
       seterror(error);
@@ -66,15 +69,15 @@ const Home = () => {
               fontSize: { lg: "2rem", md: "1.5rem", sm: "1rem", xs: "1.5rem" },
             }}
           >
-            Recent Quotes
+            Your Feed
           </Typography>
           <CreateBlog />
         </Box>
         <div
           style={{
             width: "97%",
-            height: "0.01%",
-            border: "0.01px solid black",
+            height: "1px",
+            backgroundColor: "black",
             marginLeft: "15px",
           }}
         />
@@ -103,7 +106,13 @@ const Home = () => {
             }}
           />
         ) : blogCount === 0 ? (
-          <Box sx={{ display: "flex", justifyContent: "center",alignItems:"center" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <h2>No one has Added any Quotes Just yet.</h2>
           </Box>
         ) : (
@@ -116,14 +125,16 @@ const Home = () => {
               username={blog.user.username}
               id={blog._id}
               isUser={localStorage.getItem("userId") === blog.user._id}
+              likes={blog.likes}
+              likebyuser={blog.likedByCurrentUser}
             />
           ))
         )}
         <div
           style={{
             width: "97%",
-            height: "2%",
-            border: "0.4px solid black",
+            height: "1px",
+            backgroundColor: "black",
             marginLeft: "15px",
           }}
         />

@@ -3,6 +3,7 @@ const express = require('express')
 const blogModel = require('../Models/blogModel.js');
 const userModel = require('../Models/userModel.js');
 const { mongoose } = require('mongoose');
+const commentsModel = require('../Models/blogComments.js');
 // const { getAllBlog, addBlog, UpdateBlogById, getBlogById, DeleteBlogById } = require("../controllers/BlogController.js")
 
 const router = express.Router()
@@ -15,9 +16,9 @@ const getAllblog = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 6;
+        const user = req.query.cuser
         // Get the requested page from the query parameters, default to page 1
         // Set the number of blog posts per page (adjust as needed)
-
         const skip = (page - 1) * limit; // Calculate the number of documents to skip
 
         // Query the database to fetch paginated blog posts
@@ -28,14 +29,31 @@ const getAllblog = async (req, res) => {
             .populate('user'); // You can use `.populate` if you want to populate the "user" field
 
         const blogCount = await blogModel.countDocuments(); // Get the total count of blog posts
-
+        const blogsWithLikes = blogs.map((blog) => {
+            const likedByCurrentUser = blog.likedBy.includes(user); // Check if the current user liked the blog
+            return {
+                _id: blog._id,
+                title: blog.title,
+                content: blog.content,
+                user: blog.user,
+                createdAt: blog.createdAt,
+                likes: blog.likes,
+                likedByCurrentUser: likedByCurrentUser, // Include whether the current user likes the blog
+            };
+        });
         res.status(200).json({
+            blogCount: blogsWithLikes.length,
+            message: 'All blogs list',
             success: true,
             blogCount,
             currentPage: page,
             totalPages: Math.ceil(blogCount / limit),
-            blogs,
+            blogs: blogsWithLikes,
         });
+
+
+
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server Error', success: false, error });
@@ -122,7 +140,7 @@ const DeleteBlogById = async (req, res) => {
 const GetBlogById = async (req, res) => {
     try {
         const { id } = req.params
-        const blog = await blogModel.findById(id)
+        const blog = await blogModel.findById(id).populate("user")
         if (!blog) {
             return res.status(400).send({ message: "No blog found", success: false })
         }
@@ -160,6 +178,82 @@ const userBlog = async (req, res) => {
         return res.status(500).send({ message: "Server Error", success: false, error })
     }
 }
+const likes = async (req, res) => {
+    try {
+        // Get the authenticated user's ID
+        const userId = req.query.Uid; // Keep it as a string
+
+        const blogId = req.query.Bid; // Keep it as a string
+
+        // Find the blog post by ID
+        const blog = await blogModel.findById(blogId);
+
+        if (!blog) {
+            return res.status(404).json({ message: 'Blog not found', success: false });
+        }
+
+        // Check if the user has already liked the post
+        if (blog.likedBy.includes(userId)) {
+            if (blog.likes !== 0) {
+                blog.likes -= 1;
+                blog.likedBy.pop(userId)
+                await blog.save();
+                return res.status(200).json({ message: 'unliked', success: true, likes: blog.likes, likedByCurrentUser: false });
+            }
+            blog.likes = 0;
+            blog.likedBy.pop(userId)
+            await blog.save();
+            return res.status(400).json({ message: 'unliked', success: true, likes: blog.likes, likedByCurrentUser: false });
+        }
+
+        // Increment the likes count and add the user's ID as an ObjectId to the likedBy array
+        blog.likes += 1;
+        blog.likedBy.push(new mongoose.Types.ObjectId(userId)); // Use the 'new' keyword
+
+        // Save the updated blog post
+        await blog.save();
+
+        res.status(200).json({ message: 'Blog post liked successfully', success: true, likes: blog.likes, likedByCurrentUser: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error while liking the blog post', success: false, error });
+    }
+}
+
+const comments = async (req, res) => {
+    try {
+        const { BlogId, UserId, content } = req.body
+
+        const blog = await blogModel.findById(BlogId)
+        if (!blog) {
+            return res.status(404).json({ message: 'Blog not found', success: false });
+        }
+        const newComment = await commentsModel({
+            text: content,
+            user: UserId,
+            blog: BlogId,
+        });
+        await newComment.save();
+        return res.status(201).json({ message: 'Comment created successfully', success: true, comment: newComment });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Error while creating the comment', success: false, error });
+    }
+
+}
+
+const getComments = (req, res) => {
+    const { id } = req.params;
+    commentsModel.find({ blog: id })
+        .populate('user')
+        .then((comments) => {
+            return res.status(200).json({ message: 'Comments fetched successfully', success: true, comments });
+        })
+        .catch((error) => {
+            console.error(error);
+            return res.status(500).json({ message: 'Error while fetching comments', success: false, error });
+        });
+}
 
 
 
@@ -174,5 +268,13 @@ router.delete('/delete-blog/:id', DeleteBlogById)
 router.get('/get-blog/:id', GetBlogById)
 
 router.get('/user-blog/:id', userBlog)
+
+router.post('/like-blog', likes)
+
+router.post('/comment-blog', comments)
+
+router.get('/get-comments/:id', getComments)
+
+
 
 module.exports = router

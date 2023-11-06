@@ -8,6 +8,7 @@ import YourQuotes from "./pages/YourQuotes";
 
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import Header from "./components/Header";
+import Social from "./pages/Social";
 
 const theme = createTheme({
   palette: {
@@ -38,6 +39,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/Signup" element={<SignUp />} />
           <Route path="/your-quotes" element={<YourQuotes />} />
+          <Route path="/Social" element={<Social />} />
 
         </Routes>
 

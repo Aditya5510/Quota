@@ -22,10 +22,10 @@ const UserSchema = new mongoose.Schema({
     },
     blogs: [{
         type: mongoose.Types.ObjectId,
-        ref:"Blog"
-       
+        ref: "Blog"
     },
-]
+    ]
+
 }, { timestamps: true });
 
 const userModel = mongoose.model("User", UserSchema);

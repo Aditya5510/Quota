@@ -17,7 +17,21 @@ const BlogSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "User",
         require: [true, "User is required"]
-    }
+    },
+    likes: {
+        type: Number,
+        default: 0,
+    },
+    likedBy: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    }],
+    comments: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Comment',
+    }],
+
+
 
 
 }, { timestamps: true });

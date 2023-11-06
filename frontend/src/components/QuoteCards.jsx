@@ -6,8 +6,10 @@ import {
   Typography,
   IconButton,
   Tooltip,
+  Badge,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 
 import axios from "axios";
 import Button from "@mui/material/Button";
@@ -17,6 +19,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import ModifyBlog from "./ModifyBlog";
+import CommentIcon from "@mui/icons-material/Comment";
+import Comment from "./Comments";
 
 const QuoteCards = ({
   username,
@@ -26,9 +30,13 @@ const QuoteCards = ({
   Title,
   isUser,
   id,
+  likes,
+  likebyuser,
 }) => {
   const [open, setOpen] = React.useState(false);
-
+  const [like, setlike] = React.useState(likes);
+  // console.log(Quote);
+  const [userLike, setuserlike] = React.useState(likebyuser);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -36,9 +44,18 @@ const QuoteCards = ({
   const handleClose = () => {
     setOpen(false);
   };
-
-  const img =
-    "https://images.unsplash.com/photo-1614027164847-1b28cfe1df60?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGlvbiUyMGhlYWR8ZW58MHx8MHx8fDA%3D";
+  const likeHandler = async () => {
+    if (userLike) {
+      setuserlike(false);
+      setlike(like - 1);
+    } else {
+      setuserlike(true);
+      setlike(like + 1);
+    }
+    const { data } = axios.post(
+      `/api/v1/blog/like-blog?Uid=${localStorage.getItem("userId")}&Bid=${id}`
+    );
+  };
 
   const handleDelete = async () => {
     try {
@@ -79,14 +96,15 @@ const QuoteCards = ({
               gap: "2px",
             }}
           >
-            {/* <AccountCircleIcon /> */}
             <Avatar
               src={profile}
               sx={{ ml: "0.5rem", height: "2rem", width: "2rem" }}
             />
             {username}
           </Typography>
-          <Typography sx={{ marginLeft: "auto" }}>{createdAt}</Typography>
+          <Typography sx={{ marginLeft: "auto", marginRight: "8px" }}>
+            {createdAt}
+          </Typography>
         </Box>
         <Container
           sx={{
@@ -103,6 +121,7 @@ const QuoteCards = ({
           }}
         >
           <Box
+            className="Quote"
             sx={{
               position: "absolute",
               width: "100%",
@@ -113,10 +132,8 @@ const QuoteCards = ({
               backgroundPosition: "center",
               display: "flex",
               justifyContent: "center",
-
               boxShadow: "0 0 5px rgba(0, 0,0,0.5)",
               transition: "all .1s ease-in-out",
-
               color: "black",
               ":hover": {
                 opacity: 0.7,
@@ -125,47 +142,11 @@ const QuoteCards = ({
               },
             }}
           >
-            {isUser && (
-              <>
-                <div>
-                  <IconButton
-                    onClick={handleClickOpen}
-                    sx={{
-                      position: "absolute",
-                      top: "0.1px",
-                      right: "0.1px",
-                    }}
-                  >
-                    <Tooltip title={"Delete Quote"}>
-                      <DeleteIcon sx={{ color: "#df3f3fe3" }} />
-                    </Tooltip>
-                  </IconButton>{" "}
-                  <Dialog
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                  >
-                    <DialogTitle id="alert-dialog-title">
-                      {" Are you sure you want to delete this quote?"}
-                    </DialogTitle>
-                    <DialogContent></DialogContent>
-                    <DialogActions>
-                      <Button onClick={handleClose}>No</Button>
-                      <Button onClick={handleDelete} autoFocus>
-                        Yes
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                </div>
-                <ModifyBlog id={id} />
-              </>
-            )}
             <Typography
               variant="h5"
               sx={{
                 width: "90%",
-                textAlign: "center",
+                textAlign: "justify",
                 wordWrap: "break-word",
                 paddingTop: "1rem",
               }}
@@ -184,6 +165,96 @@ const QuoteCards = ({
           }}
         >
           {Title}
+        </Typography>
+        <div style={{ height: "01px", backgroundColor: "black" }} />
+        <Typography
+          sx={{
+            width: "100%",
+            height: "auto",
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            position: "relative",
+          }}
+        >
+          {" "}
+          <IconButton onClick={likeHandler}>
+            <Badge badgeContent={like} color="primary">
+              {userLike ? (
+                <ThumbUpIcon
+                  sx={{
+                    height: "20px",
+                    width: "20px",
+                    color: "#4ADB9A",
+                    border: "1px solid black",
+                    borderRadius: "50%",
+                    padding: "5px",
+                    backgroundColor: "#323232",
+                  }}
+                />
+              ) : (
+                <ThumbUpIcon
+                  sx={{
+                    height: "20px",
+                    width: "20px",
+                    color: "#4ADB9A",
+                    border: "1px solid black",
+                    borderRadius: "50%",
+                    padding: "5px",
+                    ":hover": {
+                      backgroundColor: "#838e89",
+                    },
+                  }}
+                />
+              )}
+            </Badge>
+          </IconButton>
+          <IconButton>
+            <Comment id={id} quote={Quote} />
+          </IconButton>
+          {isUser && (
+            <>
+              {" "}
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginLeft: "auto",
+                }}
+              >
+                <ModifyBlog id={id} />
+                <IconButton onClick={handleClickOpen}>
+                  <Tooltip title={"Delete Quote"}>
+                    <DeleteIcon
+                      sx={{
+                        color: "#df3f3fe3",
+                        border: "1px solid black",
+                        borderRadius: "50%",
+                        padding: "5px",
+                      }}
+                    />
+                  </Tooltip>
+                </IconButton>{" "}
+                <Dialog
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {" Are you sure you want to delete this quote?"}
+                  </DialogTitle>
+                  <DialogContent></DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose}>No</Button>
+                    <Button onClick={handleDelete} autoFocus>
+                      Yes
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </Box>
+            </>
+          )}
         </Typography>
       </Box>
     </>
