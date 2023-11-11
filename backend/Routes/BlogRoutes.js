@@ -26,7 +26,7 @@ const getAllblog = async (req, res) => {
             .find()
             .skip(skip)
             .limit(limit)
-            .populate('user'); // You can use `.populate` if you want to populate the "user" field
+            .populate('user').populate('comments'); // You can use `.populate` if you want to populate the "user" field
 
         const blogCount = await blogModel.countDocuments(); // Get the total count of blog posts
         const blogsWithLikes = blogs.map((blog) => {
@@ -38,7 +38,8 @@ const getAllblog = async (req, res) => {
                 user: blog.user,
                 createdAt: blog.createdAt,
                 likes: blog.likes,
-                likedByCurrentUser: likedByCurrentUser, // Include whether the current user likes the blog
+                likedByCurrentUser: likedByCurrentUser,
+                comments: blog.comments
             };
         });
         res.status(200).json({
@@ -225,6 +226,7 @@ const comments = async (req, res) => {
         const { BlogId, UserId, content } = req.body
 
         const blog = await blogModel.findById(BlogId)
+        const existingUser = await userModel.findById(UserId)
         if (!blog) {
             return res.status(404).json({ message: 'Blog not found', success: false });
         }
@@ -233,6 +235,16 @@ const comments = async (req, res) => {
             user: UserId,
             blog: BlogId,
         });
+
+        const session = await mongoose.startSession()
+        session.startTransaction()
+        await newComment.save({ session })
+
+        existingUser.comments.push(newComment)
+        blog.comments.push(newComment)
+        await existingUser.save({ session })
+        await blog.save({ session })
+        await session.commitTransaction()
         await newComment.save();
         return res.status(201).json({ message: 'Comment created successfully', success: true, comment: newComment });
     } catch (error) {
@@ -256,6 +268,31 @@ const getComments = (req, res) => {
 }
 
 
+const deleteComment = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const comment = await commentsModel.findByIdAndDelete(id).populate("user").populate("blog")
+
+        if (!comment) {
+            return res.status(400).send({ message: "No comment found", success: false })
+        }
+
+        await comment.user.comments.pull(comment);
+        await comment.blog.comments.pull(comment);
+        await comment.user.save();
+        await comment.blog.save();
+
+        return res.status(200).send({ message: "Comment deleted successfully", success: true, comment })
+    }
+    catch (error) {
+        console.log(error)
+        return res.status(500).send({ message: "Error while deleting the comment", success: false, error })
+    }
+
+
+}
+
+
 
 router.get('/all-blog', getAllblog)
 
@@ -274,6 +311,9 @@ router.post('/like-blog', likes)
 router.post('/comment-blog', comments)
 
 router.get('/get-comments/:id', getComments)
+
+router.delete('/delete-comment/:id', deleteComment)
+
 
 
 

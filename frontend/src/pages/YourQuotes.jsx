@@ -44,7 +44,13 @@ const YourQuotes = () => {
       {loading ? (
         <>
           {" "}
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              backgroundColor: "#bcd4cb6a",
+            }}
+          >
             <Skeleton
               variant="rectangular"
               animation="pulse"
@@ -130,6 +136,8 @@ const YourQuotes = () => {
               username={userName}
               id={blog._id}
               isUser={true}
+              likes={blog.likes}
+              likebyuser={blog.likedByCurrentUser}
             />
           ))
         )}

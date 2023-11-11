@@ -10,6 +10,7 @@ const connectDB = require('./config/conmectDB.js')
 dotenv.config()
 const UserRoutes = require('./Routes/UserRoutes.js')
 const BlogRoutes = require('./Routes/BlogRoutes.js')
+const ChatRoutes = require('./Routes/chatRoutes.js')
 
 
 const app = express()
@@ -27,6 +28,7 @@ app.use(morgan('dev'))
 //Routes
 app.use('/api/v1/user/', UserRoutes)
 app.use('/api/v1/blog/', BlogRoutes)
+app.use('/api/v1/chat/', ChatRoutes)
 
 
 

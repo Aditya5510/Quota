@@ -25,6 +25,8 @@ import { useNavigate } from "react-router-dom";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import axios from "axios";
 import Person2Icon from "@mui/icons-material/Person2";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import { Badge } from "@mui/material";
 
 function Header() {
   const isLogi = useSelector((state) => state.isLogin);
@@ -151,7 +153,7 @@ function Header() {
                     textAlign="center"
                     startIcon={<Person2Icon sx={{ color: "#4ADB9A" }} />}
                     LinkComponent={Link}
-                    to="your-quotes"
+                    to="/your-quotes"
                   >
                     Profile
                   </Button>
@@ -161,7 +163,7 @@ function Header() {
                     textAlign="center"
                     startIcon={<PeopleIcon sx={{ color: "#4ADB9A" }} />}
                     LinkComponent={Link}
-                    to="Social"
+                    to="/Social"
                   >
                     Social
                   </Button>
@@ -252,14 +254,31 @@ function Header() {
             <Box sx={{ flexGrow: 0 }}>
               {isLogi ? (
                 <>
-                  {" "}
-                  <Tooltip title="Open settings">
-                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                      <InsertEmoticonIcon
-                        sx={{ height: "35px", width: "35px", color: "#4ADB9A" }}
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "1rem",
+                    }}
+                  >
+                    {" "}
+                    <Badge badgeContent={"23"} sx={{color:"#4ADB9A"}}>
+                      <NotificationsIcon
+                        sx={{ color: "#4ADB9A", cursor: "pointer",transition:"all .2s ease-in-out",":hover":{transform:"scale(1.1)"} }}
                       />
-                    </IconButton>
-                  </Tooltip>
+                    </Badge>{" "}
+                    <Tooltip title="Open settings">
+                      <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                        <InsertEmoticonIcon
+                          sx={{
+                            height: "35px",
+                            width: "35px",
+                            color: "#4ADB9A",
+                          }}
+                        />
+                      </IconButton>
+                    </Tooltip>
+                  </div>
                 </>
               ) : (
                 <>

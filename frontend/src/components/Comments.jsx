@@ -14,13 +14,34 @@ import SendIcon from "@mui/icons-material/Send";
 import Slide from "@mui/material/Slide";
 import axios from "axios";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import ShareIcon from "@mui/icons-material/Share";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { createContext } from "react";
+import { useContext } from "react";
+
+export const refresher = createContext();
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const CommentsCard = ({ Profile, Username, Content }) => {
+const CommentsCard = ({ Profile, Username, Content, commentId, isUser }) => {
+  const { refresh, setrefresh } = useContext(refresher);
+  // console.log(isUser)
+
+  const deleteCommentHandle = async () => {
+    try {
+      const { data } = await axios.delete(
+        `/api/v1/blog/delete-comment/${commentId}`
+      );
+      if (data?.success) {
+        // alert("Comment deleted successfully");
+        setrefresh(!refresh);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div>
       <Box
@@ -65,16 +86,20 @@ const CommentsCard = ({ Profile, Username, Content }) => {
                   borderRadius: "50%",
                 }}
               />
-              <ShareIcon
-                sx={{
-                  height: "15px",
-                  width: "15px",
-                  padding: "3px",
-                  cursor: "pointer",
-                  border: "1px solid black",
-                  borderRadius: "50%",
-                }}
-              />
+              {isUser && (
+                <DeleteIcon
+                  onClick={deleteCommentHandle}
+                  sx={{
+                    height: "15px",
+                    width: "15px",
+                    padding: "3px",
+                    cursor: "pointer",
+                    border: "1px solid black",
+                    borderRadius: "50%",
+                    color: "#ba3636",
+                  }}
+                />
+              )}
             </Box>
           </Box>
           {Content}
@@ -109,8 +134,10 @@ export default function Comment({ id, quote }) {
   const [allcomments, setcomment] = React.useState([]);
   const [postHolder, setpostHolder] = React.useState(initialBlogState);
   const [x, setx] = React.useState(0);
-  console.log(quote);
-  console.log(id);
+  const [refresh, setrefresh] = React.useState(false);
+  const exisitingUser = localStorage.getItem("userId");
+  // console.log(quote);
+  // console.log(id);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -123,7 +150,7 @@ export default function Comment({ id, quote }) {
   React.useEffect(() => {
     fetchComments();
     fetchpostHolder();
-  }, [open, x]);
+  }, [open, x, refresh]);
 
   const fetchpostHolder = async () => {
     try {
@@ -142,8 +169,6 @@ export default function Comment({ id, quote }) {
       const { data } = await axios.get(`/api/v1/blog/get-comments/${id}`);
       if (data?.success) {
         setcomment(data?.comments);
-        // setx(data.comments[0].text);
-        // console.log(data.comments);
       }
     } catch (error) {
       console.log(error);
@@ -163,8 +188,8 @@ export default function Comment({ id, quote }) {
         content: newdata.get("Comment"),
       });
       if (data.success) {
-        alert("Comment added successfully");
-        setx(1);
+        // alert("Comment added successfully");
+        setx(!x);
       }
     } catch (error) {
       console.error(error);
@@ -172,7 +197,7 @@ export default function Comment({ id, quote }) {
   };
 
   return (
-    <React.Fragment>
+    <refresher.Provider value={{ refresh: refresh, setrefresh: setrefresh }}>
       <Badge badgeContent={allcomments.length} color="primary">
         <CommentIcon
           onClick={handleClickOpen}
@@ -194,10 +219,16 @@ export default function Comment({ id, quote }) {
         aria-labelledby="customized-dialog-title"
         open={open}
         fullScreen
-        TransitionComponent={Transition}
+        // TransitionComponent={Transition}
       >
         <DialogTitle
-          sx={{ m: 0, p: 2, height: "5vh", borderRadius: "5px" }}
+          sx={{
+            m: 0,
+            p: 2,
+            height: "3vh",
+            borderRadius: "5px",
+            overflowY: "hidden",
+          }}
           className="Dialogue"
           id="customized-dialog-title"
         >
@@ -217,15 +248,15 @@ export default function Comment({ id, quote }) {
         </IconButton>
         <DialogContent
           dividers
-          sx={{ display: "flex", flexWrap: "wrap" }}
+          sx={{ display: "flex", flexWrap: "wrap", height: "auto" }}
           className="Dialogue"
         >
           {" "}
           <Box
             sx={{
               borderRadius: "10px",
-              border: "0.2px solid black",
-              height: { lg: "100%", md: "100%", sm: "40%", xs: "50%" },
+              // border: "0.2px solid black",
+              height: { lg: "auto", md: "100%", sm: "40%", xs: "60%" },
               width: { lg: "40%", md: "40%", sm: "100%", xs: "100%" },
               display: "flex",
               flexDirection: "column",
@@ -238,10 +269,13 @@ export default function Comment({ id, quote }) {
               className="Quote"
               sx={{
                 position: "absolute",
-                width: "100%",
-                height: "100%",
+                top: "0",
+                width: { lg: "100%", md: "100%", sm: "110%", xs: "110%" },
+                height: "auto",
+                minHeight: "60%",
+                padding: "1rem",
                 overflowY: "scroll ",
-                backgroundColor: "#4E4E4E",
+                backgroundColor: "#bcd4cb6a",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 display: "flex",
@@ -249,6 +283,7 @@ export default function Comment({ id, quote }) {
                 boxShadow: "0 0 5px rgba(0, 0,0,0.5)",
                 transition: "all .1s ease-in-out",
                 color: "black",
+                // alignItems: "center",
                 ":hover": {
                   opacity: 0.7,
                   transform: "scale(0.98)",
@@ -272,36 +307,43 @@ export default function Comment({ id, quote }) {
           <Box
             dividers
             sx={{
-              height: { lg: "100%", md: "100%", sm: "60%", xs: "50%" },
+              height: { lg: "auto", md: "auto", sm: "60%", xs: "40%" },
               width: { lg: "50%", md: "40%", sm: "90%", xs: "90%" },
               paddingLeft: "20px",
               mt: { lg: "0px", md: "0px", sm: "0px", xs: "10px" },
             }}
           >
-            <Box sx={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.8rem",
+                borderBottom: "1px solid black",
+                paddingBottom: "2px",
+              }}
+            >
               <Avatar
                 src={postHolder.user.Profile}
                 sx={{ height: "50px", width: "50px" }}
               />
-              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              <Typography
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: { lg: "20px", md: "20px", sm: "15px", xs: "15px" },
+                }}
+              >
                 {postHolder.user.username}'s Quote
               </Typography>
             </Box>
-            <div
-              style={{
-                height: "1px",
-                width: "100%",
-                backgroundColor: "black",
-                marginTop: "2px",
-              }}
-            />
 
             {allcomments.map((comment) => (
               <>
                 <CommentsCard
                   Content={comment.text}
-                  Profile={comment.user.Profile}
-                  Username={comment.user.username}
+                  Profile={comment.user?.Profile}
+                  Username={comment.user?.username}
+                  commentId={comment._id}
+                  isUser={exisitingUser === comment.user._id ? true : false}
                 />
               </>
             ))}
@@ -344,6 +386,6 @@ export default function Comment({ id, quote }) {
           </Box>
         </DialogActions>
       </Dialog>
-    </React.Fragment>
+    </refresher.Provider>
   );
 }

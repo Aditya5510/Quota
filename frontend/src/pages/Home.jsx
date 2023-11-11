@@ -56,7 +56,7 @@ const Home = () => {
   return (
     <div className="Home-main-container">
       <Header />
-      <Container sx={{ mt: "4rem" }}>
+      <Container sx={{ mt: "4rem", }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Typography
             variant="h4"

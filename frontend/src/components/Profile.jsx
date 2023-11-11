@@ -28,6 +28,7 @@ const Profile = ({ id, Profile, Quotes, username, email }) => {
   return (
     <>
       <Container
+        className="main-Box-with-border"
         sx={{
           width: { lg: "50%", md: "50%", sm: "80%", xs: "90%" },
           mt: { lg: "19vh", md: "20vh", sm: "10vh", xs: "10vh" },
@@ -114,7 +115,7 @@ const Profile = ({ id, Profile, Quotes, username, email }) => {
             backgroundColor: "#232222",
             fontWeight: "bold",
             bottom: { lg: "10%", md: "10%", sm: "10%", xs: "80%" },
-            right: { lg: "6.1%", md: "4%", sm: "4%", xs: "4%" },
+            right: { lg: "12.1%", md: "4%", sm: "4%", xs: "4%" },
             position: "absolute",
             cursor: "pointer",
             borderRadius: "10px",
@@ -136,17 +137,7 @@ const Profile = ({ id, Profile, Quotes, username, email }) => {
             },
           }}
         >
-          <DeleteIcon
-            sx={{
-              color: "#343435",
-              ":hover": {
-                transform: "scale(1.01)",
-                background: "#080808",
-                color: "#d31b1b",
-              },
-            }}
-          />{" "}
-          DeleteAcc
+          <DeleteIcon />{" "}
         </Typography>
       </Container>
     </>

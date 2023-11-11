@@ -14,6 +14,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import img from"../Images/logo (2).png"
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ export default function SignUp() {
 
   return (
     <Box
-      className="Home-main-container"
+     
       sx={{
         height: "100vh",
         width: "100vw",
@@ -83,10 +84,13 @@ export default function SignUp() {
     >
       <Container
         component="main"
+        className="main-Box-with-border"
+      
         sx={{
           border: "0.01px solid black",
           borderRadius: "10px",
           maxWidth: { lg: "30vw", md: "30", sm: "80vw", xs: "85vw" },
+          backgroundColor:"#bcd4cb6a"
         }}
       >
         <CssBaseline />
@@ -98,9 +102,8 @@ export default function SignUp() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
+           <Avatar sx={{ m: 1 }} src={img}/>
+          
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>

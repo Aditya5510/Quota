@@ -73,12 +73,13 @@ const QuoteCards = ({
 
   return (
     <>
-      <Box
+      <Box className="main-Box-with-border"
         sx={{
           width: "350px",
           height: "auto",
           border: "0.1px solid black",
           borderRadius: "5px",
+          backgroundColor:"#343435",
         }}
       >
         <Box
@@ -94,15 +95,16 @@ const QuoteCards = ({
               justifyContent: "center",
               alignItems: "center",
               gap: "2px",
+              color:"white"
             }}
           >
             <Avatar
               src={profile}
-              sx={{ ml: "0.5rem", height: "2rem", width: "2rem" }}
+              sx={{ ml: "0.5rem", height: "2rem", width: "2rem" ,  }}
             />
             {username}
           </Typography>
-          <Typography sx={{ marginLeft: "auto", marginRight: "8px" }}>
+          <Typography sx={{ marginLeft: "auto", marginRight: "8px",    color:"white" }}>
             {createdAt}
           </Typography>
         </Box>
@@ -127,7 +129,7 @@ const QuoteCards = ({
               width: "100%",
               height: "100%",
               overflowY: "scroll ",
-              backgroundColor: "#4E4E4E",
+              backgroundColor:"#bcd4cbb1",
               backgroundSize: "cover",
               backgroundPosition: "center",
               display: "flex",
@@ -143,12 +145,14 @@ const QuoteCards = ({
             }}
           >
             <Typography
-              variant="h5"
+              variant="h6"
               sx={{
                 width: "90%",
                 textAlign: "justify",
                 wordWrap: "break-word",
+                letterSpacing: "2px",
                 paddingTop: "1rem",
+              
               }}
             >
               {Quote}
@@ -162,6 +166,7 @@ const QuoteCards = ({
             fontWeight: "bold",
             wordWrap: "break-word",
             height: "auto",
+            color:"white"
           }}
         >
           {Title}
@@ -179,17 +184,18 @@ const QuoteCards = ({
         >
           {" "}
           <IconButton onClick={likeHandler}>
-            <Badge badgeContent={like} color="primary">
+            <Badge badgeContent={like} sx={{color:"white"}}>
               {userLike ? (
                 <ThumbUpIcon
                   sx={{
                     height: "20px",
                     width: "20px",
-                    color: "#4ADB9A",
+                  
                     border: "1px solid black",
                     borderRadius: "50%",
                     padding: "5px",
-                    backgroundColor: "#323232",
+                    backgroundColor: "#4ADB9A",
+                    color:"white"
                   }}
                 />
               ) : (
@@ -201,8 +207,10 @@ const QuoteCards = ({
                     border: "1px solid black",
                     borderRadius: "50%",
                     padding: "5px",
+                    transition: "all .2s ease-in-out",
                     ":hover": {
-                      backgroundColor: "#838e89",
+                      backgroundColor: "#4ADB9A",
+                      color:"white"
                     },
                   }}
                 />

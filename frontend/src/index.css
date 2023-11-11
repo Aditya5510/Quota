@@ -61,12 +61,20 @@ body::-webkit-scrollbar-thumb {
   width: 10px;               /* width of the entire scrollbar */
 }
 .Quote::-webkit-scrollbar-track{
-  background: #b5b5b6;              /* width of the entire scrollbar */
+  background: transparent;              /* width of the entire scrollbar */
 }
 .Quote::-webkit-scrollbar-thumb{
   background-color: #4ADB9A;    /* color of the scroll thumb */
   border-radius: 20px;       /* roundness of the scroll thumb */
   border: 3px solid rgb(255, 255, 255);            /* width of the entire scrollbar */
+}
+.quote{
+  background: rgba(214, 214, 214, 0.35);
+  box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+  backdrop-filter: blur( 4.5px );
+  -webkit-backdrop-filter: blur( 4.5px );
+  border-radius: 10px;
+  border: 1px solid rgba(218, 215, 215, 0.43);
 }
 
 
@@ -76,4 +84,37 @@ body::-webkit-scrollbar-thumb {
   animation: bg 15s ease-in-out infinite;
   height: auto;
   overflow-x: hidden;
+}
+
+
+.chats{
+  
+
+
+
+ border:1px solid black;
+ height: auto;
+ /* min-height: 2rem; */
+ width: auto;
+ padding: 10px;
+ border-radius: 10PX;
+
+}
+
+.main-Box-with-border{
+  background: rgba(214, 214, 214, 0.35);
+box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+backdrop-filter: blur( 4.5px );
+-webkit-backdrop-filter: blur( 4.5px );
+border-radius: 10px;
+border: 1px solid rgba(218, 215, 215, 0.43);
+}
+.left-Component-scrollable::-webkit-scrollbar {
+  width: 10px;               /* width of the entire scrollbar */
+}
+.MessageBODY::-webkit-scrollbar {
+  width: 10px;               /* width of the entire scrollbar */
+}
+.Dialogue::-webkit-scrollbar {
+  width: 10px;               /* width of the entire scrollbar */
 }

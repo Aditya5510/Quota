@@ -3,7 +3,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 // import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-
+import img from "../Images/logo (2).png"
 import { Link } from "react-router-dom";
 
 import Grid from "@mui/material/Grid";
@@ -66,24 +66,32 @@ export default function Login() {
           height: "100vh",
         }}
       >
-        <Box
+        <Box      
           sx={{
             display: { lg: "block", md: "none", sm: "none", xs: "none" },
             height: "100%",
             maxWidth: { lg: "30vw", md: "0", sm: "0", xs: "0" },
             height: { lg: "46vh", md: "0vh", sm: "0", xs: "0" },
-            backgroundColor: "transparent",
+            backgroundColor:"#bcd4cb6a",
             borderRadius: "5px",
-            border: "0.1px solid black",
+            borderLeft: "0.1px solid black",
+            borderBottom: "0.1px solid black",
+            borderTop: "0.1px solid black",
             padding: "3rem",
             textAlign: "justify",
+                 
             // position: "absolute",
           }}
-        >
-          Quotations, conversations, and companionship—login to quotA for it all
+          >
+            <Box sx={{display:"flex",justifyContent:"center",alignItems:"center"}}>
+          <Avatar src={img} sx={{height:"5rem",width:"5rem"}}/>
+        <h1>  QuotA</h1>
+        </Box>
+          <h2>  Quotations, conversations, and companionship</h2>
+       
         </Box>
         <Box
-          className="Home-main-container"
+       className="main-Box-with-border"
           sx={{
             display: "flex",
             alignItems: "center",
@@ -97,6 +105,7 @@ export default function Login() {
               border: "0.1px solid black",
               borderRadius: "5px",
               maxWidth: { lg: "30vw", md: "30vw", sm: "80vw", xs: "85vw" },
+              backgroundColor:"#bcd4cb6a"
             }}
           >
             <Box
@@ -107,9 +116,8 @@ export default function Login() {
                 alignItems: "center",
               }}
             >
-              <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                <LockOutlinedIcon />
-              </Avatar>
+              <Avatar sx={{ m: 1 }} src={img}/>
+                
               <Typography component="h1" variant="h5">
                 Sign in
               </Typography>

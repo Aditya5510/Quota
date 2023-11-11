@@ -24,7 +24,25 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "Blog"
     },
-    ]
+    ],
+    comments: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Comment',
+    }],
+    messages: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'message',
+    }],
+    friends: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    }],
+    friendRequests: [{
+        type: String,
+    }],
+    friendSenders: [{
+        type: String
+    }],
 
 }, { timestamps: true });
 
