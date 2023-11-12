@@ -8,7 +8,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
 
-const Profile = ({ id, Profile, Quotes, username, email }) => {
+const Profile = ({ id, Profile, Quotes, username, email, friends, blog }) => {
   const navigate = useNavigate();
   const handleDelete = async () => {
     try {
@@ -67,7 +67,7 @@ const Profile = ({ id, Profile, Quotes, username, email }) => {
                 gap: "0.5rem",
               }}
             >
-              <PeopleAltIcon /> Friends:23
+              <PeopleAltIcon /> Friends:{friends}
             </Typography>
             <Typography
               sx={{
@@ -81,7 +81,7 @@ const Profile = ({ id, Profile, Quotes, username, email }) => {
                 gap: "0.5rem",
               }}
             >
-              <FormatQuoteIcon /> Quotes:25
+              <FormatQuoteIcon /> Quotes:{blog}
             </Typography>
           </Box>
           <Box sx={{ mt: "1rem" }}>

@@ -53,6 +53,21 @@ const Social = () => {
   const [userData, setUserData] = React.useState([]);
   const [userData1, setUserData1] = React.useState([]);
   const [change, setchange] = React.useState(false);
+  const [friendList, setfriednList] = React.useState([]);
+  const [currentUser, setCurrentUser] = React.useState({});
+
+  const userDetails = async () => {
+    try {
+      const { data } = await axios.get(
+        `/api/v1/user/current-user/${localStorage.getItem("userId")}`
+      );
+      if (data?.success) {
+        setCurrentUser(data?.user);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const getUserdata = async () => {
     try {
@@ -61,7 +76,8 @@ const Social = () => {
       );
       if (data?.success) {
         setUserData(data?.otherUsers);
-        console.log(data?.otherUsers);
+        setfriednList(data?.friendList);
+        // console.log(data?.otherUsers);
       }
     } catch (error) {
       console.log(error);
@@ -75,7 +91,7 @@ const Social = () => {
       );
       if (data?.success) {
         setUserData1(data?.friendRequestList);
-        console.log(data?.friendRequestList);
+        // console.log(data?.friendRequestList);
       }
     } catch (error) {
       console.log(error);
@@ -85,6 +101,7 @@ const Social = () => {
   React.useEffect(() => {
     getUserdata();
     getRequests();
+    userDetails();
   }, [value, change]);
 
   const handleChange = (event, newValue) => {
@@ -185,6 +202,7 @@ const Social = () => {
               <ChatComponent />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
+              <h3 style={{ alignSelf: "center" }}>People</h3>
               <Container
                 sx={{
                   display: "flex",
@@ -206,11 +224,41 @@ const Social = () => {
                       user={user.username}
                       profile={user.Profile}
                       quotes={user.blogs.length}
+                      requestSent={currentUser.friendRequests.includes(
+                        user._id
+                      )}
                     />
                   );
                 })}
               </Container>
               <br />
+              <h3 style={{ alignSelf: "center" }}>friends list</h3>
+              <Container
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  gap: ".5em",
+                  // border: "1px solid black",
+                }}
+              >
+                {friendList?.map((user) => {
+                  if (user._id === localStorage.getItem("userId")) {
+                    return null;
+                  }
+                  return (
+                    <UserCard
+                      key={user._id}
+                      id={user._id}
+                      user={user.username}
+                      profile={user.Profile}
+                      quotes={user.blogs.length}
+                      friendList={true}
+                    />
+                  );
+                })}
+              </Container>
               <h3 style={{ alignSelf: "center" }}>friends requests</h3>
               <Container
                 sx={{

@@ -14,6 +14,7 @@ const YourQuotes = () => {
   const [error, seterror] = useState(null);
   const [userName, setusername] = useState("");
   const [blogimg, setblogimg] = useState(null);
+  const [friend, setfriend] = useState(0);
   const [Email, setemail] = useState("");
 
   const getyourblog = async () => {
@@ -26,6 +27,7 @@ const YourQuotes = () => {
         setblogimg(data?.userblog.Profile);
         setusername(data?.userblog.username);
         setemail(data?.userblog.email);
+        setfriend(data?.userblog.friends.length);
         setloading(false);
       }
     } catch (error) {
@@ -70,7 +72,13 @@ const YourQuotes = () => {
       ) : (
         <>
           {" "}
-          <Profile Profile={blogimg} username={userName} email={Email} />
+          <Profile
+            Profile={blogimg}
+            username={userName}
+            email={Email}
+            friends={friend}
+            blog={blogs.length}
+          />
         </>
       )}
 

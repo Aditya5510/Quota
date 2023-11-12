@@ -4,7 +4,15 @@ import React from "react";
 import { changes } from "../pages/Social";
 import { useContext } from "react";
 
-const UserCard = ({ id, user, profile, quotes, request }) => {
+const UserCard = ({
+  id,
+  user,
+  profile,
+  quotes,
+  request,
+  friendList,
+  requestSent,
+}) => {
   const { change, setchange } = useContext(changes);
 
   const friendRequest = async () => {
@@ -14,6 +22,10 @@ const UserCard = ({ id, user, profile, quotes, request }) => {
       const { data } = await axios.post(`/api/v1/user/add-friend/${userId}`, {
         friendId: id,
       });
+      if ((data.message = "Friend request already sent")) {
+        setchange(!change);
+        return alert("Friend request already sent");
+      }
       if (data.success) {
         setchange(!change);
       }
@@ -75,34 +87,44 @@ const UserCard = ({ id, user, profile, quotes, request }) => {
       <Avatar src={profile} sx={{ height: "100px", width: "100px" }} />
       <Typography sx={{ mt: "5px" }}>{user}</Typography>
       <Typography sx={{ mt: "5px" }}>Quotes:{quotes}</Typography>
-      <Box>
-        {!request ? (
-          <>
-            {" "}
-            <Button
-              variant={"contained"}
-              sx={{ mt: "5px" }}
-              onClick={friendRequest}
-            >
-              Add friend
-            </Button>
-          </>
-        ) : (
-          <Box sx={{ display: "flex", gap: "0.1rem" }}>
-            {" "}
-            <Button variant={"contained"} sx={{ mt: "5px" }} onClick={friend}>
-              Accept
-            </Button>
-            <Button
-              variant={"contained"}
-              sx={{ mt: "5px" }}
-              onClick={notfriend}
-            >
-              Decline
-            </Button>
+      {!friendList && (
+        <>
+          {" "}
+          <Box>
+            {!request ? (
+              <>
+                {" "}
+                <Button
+                  variant={"contained"}
+                  sx={{ mt: "5px" }}
+                  onClick={friendRequest}
+                  disabled={requestSent}
+                >
+                  Add friend
+                </Button>
+              </>
+            ) : (
+              <Box sx={{ display: "flex", gap: "0.1rem" }}>
+                {" "}
+                <Button
+                  variant={"contained"}
+                  sx={{ mt: "5px" }}
+                  onClick={friend}
+                >
+                  Accept
+                </Button>
+                <Button
+                  variant={"contained"}
+                  sx={{ mt: "5px" }}
+                  onClick={notfriend}
+                >
+                  Decline
+                </Button>
+              </Box>
+            )}
           </Box>
-        )}
-      </Box>
+        </>
+      )}
     </Container>
   );
 };

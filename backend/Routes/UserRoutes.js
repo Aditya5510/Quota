@@ -135,6 +135,8 @@ const addFriend = async (req, res) => {
 
             if (friend.friends.includes(id) || user.friends.includes(friendId)) return res.status(400).send({ message: "Already friends", success: false });
 
+            if (user.friendRequests.includes(friendId)) return res.status(400).send({ message: "Friend request already sent", success: false });
+
             // Add the user to the friend's friends list
             friend.friendSenders.push(id);
             user.friendRequests.push(friendId);
@@ -160,7 +162,7 @@ const getFriendRequest = async (req, res) => {
 
         const user = await userModel.findById(id);
         const friend = await userModel.findById(friendId);
-        if (ans) {
+        if (ans === "true") {
             user.friends.push(friendId);
             friend.friends.push(id);
             user.friendSenders.pop(friendId);
@@ -169,7 +171,7 @@ const getFriendRequest = async (req, res) => {
             await friend.save();
             return res.status(200).send({ message: "Friend added successfully", success: true });
         }
-        else {
+        else if (ans === "false") {
             user.friendSenders.pop(friendId);
             friend.friendRequests.pop(id);
             await user.save();
