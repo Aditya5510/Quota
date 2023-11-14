@@ -110,6 +110,11 @@ const deleteUser = async (req, res) => {
             // Delete the user's blogs
             await blogModel.deleteMany({ user: user._id });
             await blogComments.deleteMany({ user: user._id });
+            const friends = await userModel.find({ friends: user._id });
+            friends.map(async (friend) => {
+                friend.friends.pop(user._id);
+                await friend.save();
+            });
 
             // Delete the user
             await userModel.findByIdAndDelete(id);

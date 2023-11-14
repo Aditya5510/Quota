@@ -38,7 +38,7 @@ const getMessages = async (req, res) => {
                 message: msg.message.text
             }
         })
-        res.status(200).send({ message: "Message sent successfully", success: true, newMessage })
+        res.status(200).send({ message: "Message received successfully", success: true, newMessage })
     }
     catch (error) {
         console.log(error)
@@ -52,7 +52,7 @@ const getMessages = async (req, res) => {
 
 router.post('/send-message', sendMessage)
 
-router.get('/get-message/:id', getMessages)
+router.post('/get-message', getMessages)
 
 
 
