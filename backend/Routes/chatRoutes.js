@@ -18,7 +18,17 @@ const sendMessage = async (req, res) => {
             sender: from,
         })
         await newMessage.save()
-        res.status(200).send({ message: "Message sent successfully", success: true, newMessage })
+
+        const messages = await messageModel.find({ users: { $all: [from, to] } }).sort({ updatedAt: 1 });
+        const getMessage = messages.map(msg => {
+            return {
+                fromself: msg.sender.toString() === from,
+                message: msg.message.text
+            }
+        })
+
+
+        res.status(200).send({ message: "Message sent successfully", success: true, getMessage })
     }
     catch (error) {
         console.log(error)
